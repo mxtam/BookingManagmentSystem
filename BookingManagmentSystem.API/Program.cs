@@ -2,6 +2,9 @@ using BookingManagmentSystem.BLL.DependencyInjection;
 using BookingManagmentSystem.DAL.DependencyInjection;
 using BookingManagmentSystem.API.Middlewares;
 using Serilog;
+using BookingManagmentSystem.DAL.Data;
+using BookingManagmentSystem.DAL.Data.Seed;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +30,21 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider
+        .GetRequiredService<AppDbContext>();
+
+    //Uncomment the following line if you want to apply migrations automatically on application startup
+    //await context.Database.MigrateAsync();
+
+    //Uncomment the following line if you want to clear the database before seeding
+    //await SeedDatabase.ClearAsync(context);
+
+    //Uncomment the following line if you want to seed the database with initial data
+    //await SeedDatabase.SeedAsync(context);
+}
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
