@@ -16,6 +16,11 @@ public class HallService : IHallService
         _hallRepository = hallRepository;
     }
 
+    /// <summary>
+    /// Gets a list of halls asynchronously.
+    /// </summary>
+    /// <returns>The list of halls with their available services.</returns>
+    /// <exception cref="NotFoundException">Thrown when no halls are found.</exception>
     public async Task<IReadOnlyList<GetHallToListDto>> GetHallsListAsync()
     {
         IReadOnlyList<Hall> halls = await _hallRepository.GetHallsListAsync() 

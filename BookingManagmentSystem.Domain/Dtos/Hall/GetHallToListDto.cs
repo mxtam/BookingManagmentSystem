@@ -2,6 +2,9 @@
 
 namespace BookingManagmentSystem.Domain.Dtos.Hall;
 
+/// <summary>
+/// Represents a DTO for a hall, including its ID, title, capacity, price, and available services.
+/// </summary>
 public class GetHallToListDto
 {
     public int Id { get; set; }

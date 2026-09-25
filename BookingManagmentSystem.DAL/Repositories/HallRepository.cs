@@ -14,6 +14,10 @@ internal class HallRepository : IHallRepository
         _context = context;
     }
 
+    /// <summary>
+    /// Gets a list of all halls from the database, including their associated services.
+    /// </summary>
+    /// <returns>The list of halls with their associated services.</returns>
     public async Task<IReadOnlyList<Hall>> GetHallsListAsync()
     {
         return await _context.Halls
