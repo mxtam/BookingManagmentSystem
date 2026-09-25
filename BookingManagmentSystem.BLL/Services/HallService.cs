@@ -1,6 +1,7 @@
 ﻿using BookingManagmentSystem.BLL.Mappers;
 using BookingManagmentSystem.Domain.Dtos.Hall;
 using BookingManagmentSystem.Domain.Entities;
+using BookingManagmentSystem.Domain.Exceptions;
 using BookingManagmentSystem.Domain.Interfaces.Repository;
 using BookingManagmentSystem.Domain.Interfaces.Services;
 
@@ -17,7 +18,8 @@ public class HallService : IHallService
 
     public async Task<IReadOnlyList<GetHallToListDto>> GetHallsListAsync()
     {
-        IReadOnlyList<Hall> halls = await _hallRepository.GetHallsListAsync();
+        IReadOnlyList<Hall> halls = await _hallRepository.GetHallsListAsync() 
+            ?? throw new NotFoundException("Неможливо отримати список залів");
 
         return halls.Select(h => h.ToGetHallToListDto()).ToList();
     }
