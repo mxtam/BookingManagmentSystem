@@ -29,4 +29,17 @@ public class HallController : ControllerBase
 
         return Ok(halls);
     }
+
+    /// <summary>
+    /// Remove a hall by its ID
+    /// </summary>
+    /// <param name="id">The ID of the hall to remove</param>
+    /// <returns>A message indicating the result of the removal operation</returns>
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<string>> Delete(int id)
+    {
+        var result = await _hallService.RemoveHallAsync(id);
+
+        return Ok(result);
+    }
 }
