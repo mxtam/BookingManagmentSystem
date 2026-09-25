@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using BookingManagmentSystem.DAL.Data;
+using BookingManagmentSystem.Domain.Interfaces.Repository;
+using BookingManagmentSystem.DAL.Repositories;
 
 namespace BookingManagmentSystem.DAL.DependencyInjection;
 
@@ -18,7 +20,9 @@ public static class ServiceCollectionExtensions
 
             options.UseSqlServer(connectionString);
         });
-        // Register repositories for the new project here.
+
+        services.AddScoped<IHallRepository, HallRepository>();
+
         return services;
     }
 }
