@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BookingManagmentSystem.DAL.Data.Configurations;
 
-internal class HallServiceConfiguration : IEntityTypeConfiguration<HallService>
+internal class HallServiceConfiguration : IEntityTypeConfiguration<HallServices>
 {
-    public void Configure(EntityTypeBuilder<HallService> builder)
+    public void Configure(EntityTypeBuilder<HallServices> builder)
     {
         builder.ToTable("HallServices");
 

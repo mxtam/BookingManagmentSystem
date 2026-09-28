@@ -15,7 +15,7 @@ public interface IHallRepository
     /// </summary>
     /// <param name="id">The ID of the hall to retrieve.</param>
     /// <returns>The hall with the specified ID.</returns>
-    Task<Hall> GetHallById(int id);
+    Task<Hall> GetHallByIdAsync(int id);
 
     /// <summary>
     /// Removes a hall asynchronously.
@@ -35,4 +35,10 @@ public interface IHallRepository
     /// <param name="title">The title of the hall to check.</param>
     /// <returns>Return true if the hall exists, false otherwise.</returns>
     Task<bool> IsHallExistsAsync(string title);
+
+    /// <summary>
+    /// Updates an existing hall asynchronously.
+    /// </summary>
+    /// <param name="hall">The hall to update.</param>
+    Task UpdateHallAsync(Hall hall);
 }

@@ -9,7 +9,7 @@ public class AppDbContext : DbContext
 
     public DbSet<Hall> Halls => Set<Hall>();
     public DbSet<Service> Services => Set<Service>();
-    public DbSet<HallService> HallServices => Set<HallService>();
+    public DbSet<HallServices> HallServices => Set<HallServices>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

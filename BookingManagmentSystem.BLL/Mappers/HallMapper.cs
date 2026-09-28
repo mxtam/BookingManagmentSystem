@@ -51,7 +51,7 @@ internal static class HallMapper
             Title = hallDto.Title,
             Capacity = hallDto.Capacity,
             Price = hallDto.Price,
-            HallServices = hallDto.ServiceIds.Select(serviceId => new HallService
+            HallServices = hallDto.ServiceIds.Select(serviceId => new HallServices
             {
                 ServiceId = serviceId
             }).ToList()

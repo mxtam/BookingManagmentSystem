@@ -22,5 +22,13 @@ public interface IHallService
     /// </summary>
     /// <param name="hallDto">The DTO containing the hall information.</param>
     /// <returns>A message representing the asynchronous creation operation.</returns>
-    Task<string> CreateHallAsync(CreateHallDto hallDto);    
+    Task<string> CreateHallAsync(CreateHallDto hallDto);
+
+    /// <summary>
+    /// Updates the hall asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the hall to update.</param>
+    /// <param name="hallDto">The DTO containing the updated hall information.</param>
+    /// <returns>A message about successful update operation.</returns>
+    Task<string> UpdateHallAsync(int id, UpdateHallDto hallDto);
 }
