@@ -39,7 +39,7 @@ public class HallService : IHallService
     /// <exception cref="NotFoundException">Thrown when the hall is not found.</exception>
     public async Task<string> RemoveHallAsync(int id)
     {
-        Hall hall = await _hallRepository.GetHallById(id) 
+        Hall hall = await _hallRepository.GetHallByIdAsync(id) 
             ?? throw new NotFoundException("Зал не знайдено");
         
 
@@ -84,5 +84,88 @@ public class HallService : IHallService
         await _hallRepository.CreateHallAsync(hall);
 
         return $"Зал з ідентифікатором {hall.Id} було успішно створено";
+    }
+
+    /// <summary>
+    /// Updates an existing hall asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the hall to update.</param>
+    /// <param name="hallDto">The DTO containing the updated hall information.</param>
+    /// <returns>A message about successful update operation.</returns>
+    /// <exception cref="NotFoundException">Thrown when the hall is not found.</exception>
+    /// <exception cref="ConflictException">Thrown when a hall with the same title already exists.</exception>
+    /// <exception cref="BadRequestException">Thrown when the provided service IDs are invalid.</exception>
+    public async Task<string> UpdateHallAsync(int id, UpdateHallDto hallDto)
+    {
+        var hall = await _hallRepository.GetHallByIdAsync(id)
+            ?? throw new NotFoundException("Зал не знайдено");
+
+        if (!string.Equals(
+                hall.Title,
+                hallDto.Title,
+                StringComparison.OrdinalIgnoreCase))
+        {
+            var isHallExists = await _hallRepository
+                .IsHallExistsAsync(hallDto.Title);
+
+            if (isHallExists)
+            {
+                throw new ConflictException(
+                    "Зал з такою назвою вже існує");
+            }
+        }
+
+        var newServiceIds = hallDto.ServiceIds
+            .Distinct()
+            .ToHashSet();
+
+        if (newServiceIds.Count > 0)
+        {
+            var existingServiceIds = await _serviceRepository
+                .GetExistingServiceIdsAsync(newServiceIds);
+
+            var invalidServiceIds = newServiceIds
+                .Except(existingServiceIds)
+                .ToList();
+
+            if (invalidServiceIds.Count > 0)
+            {
+                throw new BadRequestException(
+                    $"Обрані послуги з ID {string.Join(", ", invalidServiceIds)} не існують");
+            }
+        }
+
+        hall.Title = hallDto.Title;
+        hall.Capacity = hallDto.Capacity;
+        hall.Price = hallDto.Price;
+
+        var currentServiceIds = hall.HallServices
+            .Select(hs => hs.ServiceId)
+            .ToHashSet();
+
+        var servicesToRemove = hall.HallServices
+            .Where(hs => !newServiceIds.Contains(hs.ServiceId))
+            .ToList();
+
+        foreach (var hallService in servicesToRemove)
+        {
+            hall.HallServices.Remove(hallService);
+        }
+
+        var serviceIdsToAdd = newServiceIds
+            .Except(currentServiceIds);
+
+        foreach (var serviceId in serviceIdsToAdd)
+        {
+            hall.HallServices.Add(new HallServices
+            {
+                HallId = hall.Id,
+                ServiceId = serviceId
+            });
+        }
+
+        await _hallRepository.UpdateHallAsync(hall);
+
+        return $"Зал з ідентифікатором {hall.Id} було успішно оновлено";
     }
 }

@@ -55,32 +55,32 @@ public static class SeedDatabase
 
         var hallServices = new[] 
         { 
-            new HallService
+            new HallServices
             {
                 Hall = hallA,
                 Service = projector
             },
-            new HallService
+            new HallServices
             {
                 Hall = hallA,
                 Service = wifi
             },
-            new HallService
+            new HallServices
             {
                 Hall = hallB,
                 Service = sound
             },
-            new HallService
+            new HallServices
             {
                 Hall = hallB,
                 Service = projector
             },
-            new HallService
+            new HallServices
             {
                 Hall = hallB,
                 Service = wifi
             },
-            new HallService
+            new HallServices
             {
                 Hall = hallC,
                 Service = wifi

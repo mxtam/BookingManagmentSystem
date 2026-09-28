@@ -32,10 +32,11 @@ internal class HallRepository : IHallRepository
     /// </summary>
     /// <param name="id">The ID of the hall to retrieve.</param>
     /// <returns>The hall with the specified ID.</returns>
-    public async Task<Hall> GetHallById(int id)
+    public async Task<Hall> GetHallByIdAsync(int id)
     {
         return await _context.Halls
-            .AsNoTracking()
+            .Include(h => h.HallServices)
+                .ThenInclude(hs => hs.Service)
             .FirstOrDefaultAsync(h => h.Id == id);
     }
 
@@ -67,5 +68,15 @@ internal class HallRepository : IHallRepository
     public async Task<bool> IsHallExistsAsync(string title)
     {
         return await _context.Halls.AnyAsync(h => h.Title == title);
+    }
+
+    /// <summary>
+    /// Updates an existing hall in the database.
+    /// </summary>
+    /// <param name="hall">The hall to update.</param>
+    public async Task UpdateHallAsync(Hall hall)
+    {
+        _context.Halls.Update(hall);
+        await _context.SaveChangesAsync();
     }
 }

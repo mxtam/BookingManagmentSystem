@@ -1,6 +1,6 @@
 ﻿namespace BookingManagmentSystem.Domain.Entities;
 
-public class HallService
+public class HallServices
 {
     public int HallId { get; set; }
     public Hall Hall { get; set; } = null!;

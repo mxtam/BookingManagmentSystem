@@ -10,5 +10,5 @@ public class Hall
 
     public decimal Price { get; set; }
 
-    public IEnumerable<HallService> HallServices { get; set; } = new List<HallService>();
+    public ICollection<HallServices> HallServices { get; set; } = new List<HallServices>();
 }
