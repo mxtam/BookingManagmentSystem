@@ -22,4 +22,17 @@ public interface IHallRepository
     /// </summary>
     /// <param name="hall">The hall to remove.</param>
     Task RemoveHallAsync(Hall hall);
+
+    /// <summary>
+    /// Creates a new hall asynchronously.
+    /// </summary>
+    /// <param name="hall">The hall to create.</param>
+    Task CreateHallAsync(Hall hall);
+
+    /// <summary>
+    /// Checks if a hall with the specified title exists in the database.
+    /// </summary>
+    /// <param name="title">The title of the hall to check.</param>
+    /// <returns>Return true if the hall exists, false otherwise.</returns>
+    Task<bool> IsHallExistsAsync(string title);
 }

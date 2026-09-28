@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddScoped<IHallRepository, HallRepository>();
+        services.AddScoped<IServiceRepository, ServiceRepository>();
 
         return services;
     }

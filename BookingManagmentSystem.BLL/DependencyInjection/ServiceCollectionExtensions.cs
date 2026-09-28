@@ -9,6 +9,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddBusinessLayer(this IServiceCollection services)
     {
         services.AddScoped<IHallService, HallService>();
+        services.AddScoped<IServiceService, ServiceService>();
 
         return services;
     }

@@ -38,4 +38,23 @@ internal static class HallMapper
             Price = service.Price
         };
     }
+
+    /// <summary>
+    /// Maps a CreateHallDto to a Hall entity.
+    /// </summary>
+    /// <param name="hallDto">The CreateHallDto to map.</param>
+    /// <returns>The Hall entity.</returns>
+    public static Hall ToHall(this CreateHallDto hallDto)
+    {
+        return new Hall
+        {
+            Title = hallDto.Title,
+            Capacity = hallDto.Capacity,
+            Price = hallDto.Price,
+            HallServices = hallDto.ServiceIds.Select(serviceId => new HallService
+            {
+                ServiceId = serviceId
+            }).ToList()
+        };
+    }
 }

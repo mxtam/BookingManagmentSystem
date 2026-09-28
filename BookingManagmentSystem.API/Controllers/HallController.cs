@@ -7,7 +7,7 @@ namespace BookingManagmentSystem.API.Controllers;
 /// <summary>
 /// Controller for halls
 /// </summary>
-[Route("api/hall")]
+[Route("api/halls")]
 [ApiController]
 public class HallController : ControllerBase
 {
@@ -22,7 +22,7 @@ public class HallController : ControllerBase
     /// Get all halls with their available services
     /// </summary>
     /// <returns>List of halls with their available services</returns>
-    [HttpGet("list")]
+    [HttpGet]
     public async Task<ActionResult<IReadOnlyList<GetHallToListDto>>> Get()
     {
         var halls = await _hallService.GetHallsListAsync();
@@ -39,6 +39,19 @@ public class HallController : ControllerBase
     public async Task<ActionResult<string>> Delete(int id)
     {
         var result = await _hallService.RemoveHallAsync(id);
+
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Create a new hall with the provided details
+    /// </summary>
+    /// <param name="hallDto">The CreateHallDto containing the hall details.</param>
+    /// <returns>A message about the success of the creation operation.</returns>
+    [HttpPost]
+    public async Task<ActionResult<string>> Create(CreateHallDto hallDto)
+    {
+        var result = await _hallService.CreateHallAsync(hallDto);
 
         return Ok(result);
     }

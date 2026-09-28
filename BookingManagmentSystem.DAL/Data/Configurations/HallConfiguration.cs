@@ -8,9 +8,21 @@ internal class HallConfiguration : IEntityTypeConfiguration<Hall>
 {
     public void Configure(EntityTypeBuilder<Hall> builder)
     {
-        builder.ToTable("Halls");
+        builder.ToTable("Halls", table => 
+        {
+            table.HasCheckConstraint(
+                "CK_Halls_Capacity",
+                "[Capacity] >= 1 AND [Capacity] <= 500");
+
+            table.HasCheckConstraint(
+                "CK_Halls_Price",
+                "[Price] >= 0 AND [Price] <= 10000");
+        });
 
         builder.HasKey(h => h.Id);
+
+        builder.HasIndex(h => h.Title)
+            .IsUnique();
 
         builder.Property(h => h.Title)
             .IsRequired()
