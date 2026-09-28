@@ -8,9 +8,17 @@ internal class ServiceConfiguration : IEntityTypeConfiguration<Service>
 {
     public void Configure(EntityTypeBuilder<Service> builder)
     {
-        builder.ToTable("Services");
+        builder.ToTable("Services", table => 
+        {
+            table.HasCheckConstraint(
+                "CK_Services_Price",
+                "[Price] >= 0 AND [Price] <= 10000");
+        });
 
         builder.HasKey(s => s.Id);
+
+        builder.HasIndex(s => s.Title)
+            .IsUnique();
 
         builder.Property(s => s.Title)
             .IsRequired()

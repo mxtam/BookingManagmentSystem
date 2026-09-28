@@ -16,4 +16,11 @@ public interface IHallService
     /// <param name="id">The ID of the hall to remove.</param>
     /// <returns>A message representing the asynchronous removal operation.</returns>
     Task<string> RemoveHallAsync(int id);
+
+    /// <summary>
+    /// Creates a new hall asynchronously based on the provided CreateHallDto.
+    /// </summary>
+    /// <param name="hallDto">The DTO containing the hall information.</param>
+    /// <returns>A message representing the asynchronous creation operation.</returns>
+    Task<string> CreateHallAsync(CreateHallDto hallDto);    
 }

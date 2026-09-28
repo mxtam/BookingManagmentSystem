@@ -1,10 +1,11 @@
-using BookingManagmentSystem.BLL.DependencyInjection;
-using BookingManagmentSystem.DAL.DependencyInjection;
 using BookingManagmentSystem.API.Middlewares;
-using Serilog;
+using BookingManagmentSystem.BLL.DependencyInjection;
 using BookingManagmentSystem.DAL.Data;
 using BookingManagmentSystem.DAL.Data.Seed;
+using BookingManagmentSystem.DAL.DependencyInjection;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,27 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 builder.Services.AddBusinessLayer();
 builder.Services.AddDataLayer(builder.Configuration.GetConnectionString("DefaultConnection"));
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var errors = context.ModelState
+                .Where(x => x.Value?.Errors.Count > 0)
+                .SelectMany(x => x.Value!.Errors)
+                .Select(x => x.ErrorMessage)
+                .ToList();
+
+            var response = new
+            {
+                error = string.Join("; ", errors),
+                statusCode = StatusCodes.Status400BadRequest
+            };
+
+            return new BadRequestObjectResult(response);
+        };
+    }); 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options => 
 { 

@@ -10,11 +10,13 @@ namespace BookingManagmentSystem.BLL.Services;
 public class HallService : IHallService
 {
     private readonly IHallRepository _hallRepository;
+    private readonly IServiceRepository _serviceRepository;
 
-    public HallService(IHallRepository hallRepository)
+    public HallService(IHallRepository hallRepository, IServiceRepository serviceRepository)
     {
         _hallRepository = hallRepository;
-    }
+        _serviceRepository = serviceRepository;
+    }    
 
     /// <summary>
     /// Gets a list of halls asynchronously.
@@ -44,5 +46,43 @@ public class HallService : IHallService
         await _hallRepository.RemoveHallAsync(hall);
 
         return "Зал було успішно видалено";
+    }
+
+
+    /// <summary>
+    /// Creates a new hall asynchronously.
+    /// </summary>
+    /// <param name="hallDto">The CreateHallDto containing the hall details.</param>
+    /// <returns>A message about the success of the creation operation.</returns>
+    /// <exception cref="ConflictException">Thrown when a hall with the same title already exists.</exception>
+    public async Task<string> CreateHallAsync(CreateHallDto hallDto)
+    {
+        var isHallExists = await _hallRepository.IsHallExistsAsync(hallDto.Title);
+
+        if (isHallExists)
+        {
+            throw new ConflictException("Зал з такою назвою вже існує");
+        }
+
+        if (hallDto.ServiceIds.Count > 0)
+        {
+            var existingServiceIds = await _serviceRepository
+                .GetExistingServiceIdsAsync(hallDto.ServiceIds);
+
+            var invalidServiceIds = hallDto.ServiceIds
+                .Except(existingServiceIds)
+                .ToList();
+
+            if (invalidServiceIds.Count > 0)
+            {
+                throw new BadRequestException(
+                    $"Обрані послуги з ID {string.Join(", ", invalidServiceIds)} не існують");
+            }
+        }
+
+        var hall = hallDto.ToHall();
+        await _hallRepository.CreateHallAsync(hall);
+
+        return $"Зал з ідентифікатором {hall.Id} було успішно створено";
     }
 }

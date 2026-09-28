@@ -48,4 +48,24 @@ internal class HallRepository : IHallRepository
         _context.Halls.Remove(hall);
         await _context.SaveChangesAsync();
     }
+
+    /// <summary>
+    /// Creates a new hall in the database.
+    /// </summary>
+    /// <param name="hall">The hall to create.</param>
+    public async Task CreateHallAsync(Hall hall)
+    {
+        _context.Halls.Add(hall);
+        await _context.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Checks if a hall with the specified title exists in the database.
+    /// </summary>
+    /// <param name="title">The title of the hall to check.</param>
+    /// <returns>Return true if the hall exists, false otherwise.</returns>
+    public async Task<bool> IsHallExistsAsync(string title)
+    {
+        return await _context.Halls.AnyAsync(h => h.Title == title);
+    }
 }
