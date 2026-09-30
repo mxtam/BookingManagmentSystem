@@ -23,6 +23,7 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IHallRepository, HallRepository>();
         services.AddScoped<IServiceRepository, ServiceRepository>();
+        services.AddScoped<IBookingRepository, BookingRepository>();
 
         return services;
     }

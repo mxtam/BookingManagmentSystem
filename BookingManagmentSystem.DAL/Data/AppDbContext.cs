@@ -10,6 +10,8 @@ public class AppDbContext : DbContext
     public DbSet<Hall> Halls => Set<Hall>();
     public DbSet<Service> Services => Set<Service>();
     public DbSet<HallServices> HallServices => Set<HallServices>();
+    public DbSet<Booking> Bookings => Set<Booking>();
+    public DbSet<BookingServices> BookingServices => Set<BookingServices>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

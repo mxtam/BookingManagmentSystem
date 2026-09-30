@@ -7,6 +7,7 @@ public static class SeedDatabase
 {
     public static async Task ClearAsync(AppDbContext context)
     {
+        await context.Bookings.ExecuteDeleteAsync();
         await context.HallServices.ExecuteDeleteAsync();
         await context.Halls.ExecuteDeleteAsync();
         await context.Services.ExecuteDeleteAsync();

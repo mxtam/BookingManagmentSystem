@@ -1,6 +1,8 @@
 ﻿using BookingManagmentSystem.DAL.Data;
 using BookingManagmentSystem.Domain.Entities;
+using BookingManagmentSystem.Domain.Exceptions;
 using BookingManagmentSystem.Domain.Interfaces.Repository;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookingManagmentSystem.DAL.Repositories;
@@ -46,8 +48,22 @@ internal class HallRepository : IHallRepository
     /// <param name="hall">The hall to remove.</param>
     public async Task RemoveHallAsync(Hall hall)
     {
+        if (await _context.Bookings.AnyAsync(b => b.HallId == hall.Id))
+        {
+            throw new ConflictException("Зал має існуючі броні на вказаний час.");
+        }
+
         _context.Halls.Remove(hall);
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException exception) when (
+            exception.InnerException is SqlException { Number: 547 } sqlException &&
+            sqlException.Message.Contains("FK_Bookings_Halls_HallId", StringComparison.Ordinal))
+        {
+            throw new ConflictException("Зал з існуючими бронюваннями не може бути видалений.");
+        }
     }
 
     /// <summary>
